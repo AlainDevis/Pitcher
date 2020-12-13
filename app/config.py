@@ -3,7 +3,7 @@ import os
 class Config:
 
 
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://nadine:uwineza123@localhost/pitches'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://alaindevis:kiki@123@localhost/pitcher'
     UPLOADED_PHOTOS_DEST ='app/static/photos'
 
     # email configurations
@@ -21,17 +21,12 @@ class Config:
 class ProdConfig(Config):
     pass
 
-
-class TestConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://nadine:uwineza123@localhost/pitches_test'
-
 class DevConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://nadine:uwineza123@localhost/pitches'
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://alaindevis:kiki@123@localhost/pitcher'
     DEBUG = True
 
 config_options = {
 'development':DevConfig,
 'production':ProdConfig,
-'test':TestConfig
 }
     
