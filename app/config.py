@@ -1,48 +1,37 @@
-from flask import Flask
-from flask_bootstrap import Bootstrap
-from config import config_options
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_uploads import UploadSet,configure_uploads,IMAGES
-from flask_mail import Mail
-from flask_simplemde import SimpleMDE
+import os
 
-bootstrap = Bootstrap()
-db = SQLAlchemy()
-simple = SimpleMDE()
-
-login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'auth.login'
-photos = UploadSet('photos',IMAGES)
-mail = Mail()
-
-def create_app(config_name):
-    app = Flask(__name__)
-
-    from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint,url_prefix = '/authenticate')
-
-    # Creating the app configurations
-    app.config.from_object(config_options[config_name])
-
-    # Initializing flask extensions
-    bootstrap.init_app(app)
-    db.init_app(app)
-    login_manager.init_app(app)
-    simple.init_app(app)
-
-    # Registering the blueprint
-    from .main import main as main_blueprint
-    app.register_blueprint(main_blueprint)
+class Config:
 
 
-    # configure UploadSet
-    configure_uploads(app,photos)
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://nadine:uwineza123@localhost/pitches'
+    UPLOADED_PHOTOS_DEST ='app/static/photos'
 
-    mail.init_app(app)
+    # email configurations
+    MAIL_SERVER = 'smtp.googlemail.com'
+    MAIL_PORT = 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
 
-    return app
-    
 
+    # simple mde  configurations
+    SIMPLEMDE_JS_IIFE = True
+    SIMPLEMDE_USE_CDN = True
+
+class ProdConfig(Config):
+    pass
+
+
+class TestConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://nadine:uwineza123@localhost/pitches_test'
+
+class DevConfig(Config):
+    SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://nadine:uwineza123@localhost/pitches'
+    DEBUG = True
+
+config_options = {
+'development':DevConfig,
+'production':ProdConfig,
+'test':TestConfig
+}
     
